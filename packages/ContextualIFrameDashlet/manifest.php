@@ -8,8 +8,8 @@ $manifest = array(
         'regex_matches' => array('7\\..*$'),
     ),
     'author' => 'SugarCRM',
-    'name' => 'Hello World Dashlet',
-    'description' => 'Package for a basic Sugar Dashlet',
+    'name' => 'Contextual iFrame Dashlet package',
+    'description' => 'Package for a configurable contextual iFrame Sugar Dashlet',
     'is_uninstallable' => true,
     'type' => 'module',
     'version' => 1,
@@ -18,7 +18,7 @@ $manifest = array(
 
 $installdefs = array(
     //You should use a unique value here for each package
-    'id' => 'BuildingBlock_HelloWorldDashlet',
+    'id' => 'BuildingBlock_ContextualIFrameDashlet',
     'beans' => array(),
     'layoutdefs' => array(),
     'relationships' => array(),

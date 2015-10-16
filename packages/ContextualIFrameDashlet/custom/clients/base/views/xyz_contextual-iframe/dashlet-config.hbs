@@ -1,0 +1,13 @@
+{{!--
+ Copyright 2015 SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license. 
+ --}}
+<div class="record">
+    {{#each dashletConfig.config.fields}}
+        <div class="row-fluid panel_body">
+            <div class="record-cell">
+                <div class="record-label">{{str label}}</div>
+                {{field ../this model=../this.settings template=../this.action}}
+            </div>
+        </div>
+    {{/each}}
+</div>
