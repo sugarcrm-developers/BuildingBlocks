@@ -1,5 +1,5 @@
 # Sugar Integration Building Blocks
-Common components to accelerate development of Sugar integrations.
+Common components to accelerate development of Sugar integrations.  This project is focused on the needs of SugarCRM ISVs and Technology partners that want to quickly build Sugar integrations that are portable, upgrade safe, and Sugar OnDemand friendly.
 
 ## Packages
 Templates that can be used for building your own Sugar Module Loadable Packages
