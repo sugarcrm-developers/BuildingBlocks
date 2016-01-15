@@ -5,7 +5,7 @@ Install this package using Module Loader in order to add the ScriptLoader plug-i
 Includes [require.js](http://requirejs.org/) which is BSD / MIT licensed.
 
 ## Usage
-
+```javascript
     ({
         plugins: ['ScriptLoader'],
 
