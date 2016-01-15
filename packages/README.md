@@ -16,3 +16,12 @@ Good starting point for building any [Sugar Dashlet](http://support.sugarcrm.com
 Shows how [Extensions Framework](http://support.sugarcrm.com/Documentation/Sugar_Developer/Sugar_Developer_Guide_7.6/Extension_Framework/) can be used to implement a custom button on a Record View without overriding any core files such as Sidecar View controllers, etc.
 
 **Install Note:**  You may need to clear your cache after install of this package to ensure that old JavaScript is cleared out of the page.
+
+## [CssLoader](packages/CssLoader/)
+Utility package that provides a very simple API for loading CSS into the Sugar application for use in Dashlets or other custom UI components.
+
+## [ScriptLoader](packages/ScriptLoader/)
+Utility package that provides a very simple API for loading JavaScript into the Sugar application for use in Dashlets or other custom UI components.
+
+Includes [require.js](http://requirejs.org/) which is BSD / MIT licensed.
+
