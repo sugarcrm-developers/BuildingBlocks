@@ -17,10 +17,10 @@ Shows how [Extensions Framework](http://support.sugarcrm.com/Documentation/Sugar
 
 **Install Note:**  You may need to clear your cache after install of this package to ensure that old JavaScript is cleared out of the page.
 
-## [CssLoader](packages/CssLoader/)
+## [CssLoader](CssLoader/)
 Utility package that provides a very simple API for loading CSS into the Sugar application for use in Dashlets or other custom UI components.
 
-## [ScriptLoader](packages/ScriptLoader/)
+## [ScriptLoader](ScriptLoader/)
 Utility package that provides a very simple API for loading JavaScript into the Sugar application for use in Dashlets or other custom UI components.
 
 Includes [require.js](http://requirejs.org/) which is BSD / MIT licensed.
