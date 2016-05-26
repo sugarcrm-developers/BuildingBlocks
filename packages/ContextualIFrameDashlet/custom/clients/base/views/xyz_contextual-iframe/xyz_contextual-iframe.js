@@ -31,7 +31,7 @@
         var ctx = this.context;
         var model = ctx.get("model");
         if (!_.isEmpty(model)) {
-            this.record = ctx.get("model").get("id");
+            this.record = model.get("id");
         }
         this.moduleName = ctx.get("module");
         this.url = this.settings.get("url");

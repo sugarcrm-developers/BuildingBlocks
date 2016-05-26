@@ -1,0 +1,11 @@
+
+<div class="headerpane">
+    <h1>
+        <span class="record-cell">{{str this.title}}</span>
+        <div class="btn-toolbar pull-right dropdown">
+            {{#each meta.buttons}}
+                {{field ../this model=../this.model template="detail"}}
+            {{/each}}
+        </div>
+    </h1>
+</div>
