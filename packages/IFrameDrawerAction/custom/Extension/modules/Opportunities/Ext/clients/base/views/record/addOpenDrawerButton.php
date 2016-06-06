@@ -3,7 +3,7 @@
  * Copyright 2016 SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
  */
 
-//Insert our custom button definition into existing Record View Buttons array for Accounts module before the sidebar toggle button
+//Insert our custom button definition into existing Record View Buttons array for Opportunities module.
 array_unshift($viewdefs['Opportunities']['base']['view']['record']['buttons'],
     array(
         'name' => 'custom_button',

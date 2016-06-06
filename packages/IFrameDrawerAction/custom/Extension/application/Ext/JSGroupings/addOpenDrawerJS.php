@@ -12,7 +12,7 @@ foreach ($js_groupings as $key => $groupings)
         if ($target == 'include/javascript/sugar_grp7.min.js')
         {
             //append the custom JavaScript file to existing grouping
-            $js_groupings[$key]['custom/modules/Opportunities/addOpenDrawerJS.js'] = 'include/javascript/sugar_grp7.min.js';
+            $js_groupings[$key]['custom/modules/Opportunities/openDrawerListener.js'] = 'include/javascript/sugar_grp7.min.js';
         }
         break;
     }

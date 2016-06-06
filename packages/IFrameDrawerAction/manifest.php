@@ -12,7 +12,7 @@ $manifest = array(
     'description' => 'UI Integration on Opportunity module with Apttus CPQ',
     'is_uninstallable' => true,
     'type' => 'module',
-    'version' => 1,
+    'version' => 3,
 );
 
 

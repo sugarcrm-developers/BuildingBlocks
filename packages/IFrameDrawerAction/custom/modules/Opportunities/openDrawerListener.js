@@ -17,18 +17,18 @@
                     }
                 }, function(){
                     //Re-attach listener on close of drawer
-                    // app.controller.context.once('button:open_drawer:click', openDrawerCallback);
+                    app.controller.context.once('button:open_drawer:click', openDrawerCallback);
                     // Reload Oppty info
                     app.controller.context.reloadData();
                 });
             }
-        }
+        };
 
         //When a record layout is loaded...
         app.router.on('route:record', function(module){
             //AND the module is Opportunities...
             if(module === 'Opportunities') {
-                //AND the 'button:create_quote:click' event occurs on the current Context
+                //AND the 'button:open_drawer:click' event occurs on the current Context
                 app.controller.context.once('button:open_drawer:click', openDrawerCallback);
             }
         });
