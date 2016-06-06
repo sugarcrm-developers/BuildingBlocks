@@ -25,3 +25,7 @@ Utility package that provides a very simple API for loading JavaScript into the 
 
 Includes [require.js](http://requirejs.org/) which is BSD / MIT licensed.
 
+## [IFrameDrawerAction](IFrameDrawerAction/)
+
+Starting point for adding a custom action to existing Sugar layouts that opens a drawer to present a custom UI within an IFrame. Currently it will pass URL parameters with context information (record id and module name) that can be used to drive a lightweight UI integration with an external application. Can be used as-is for a Proof of Concept or Demos and can be easily customized for additional capability.
+
