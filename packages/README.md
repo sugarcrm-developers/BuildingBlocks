@@ -1,7 +1,7 @@
 # Package Listing
-Each of these packages are ready to be zipped, uploaded and installed using [Module Loader](https://support.sugarcrm.com/Documentation/Sugar_Versions/7.6/Ent/Administration_Guide/Developer_Tools/Module_Loader/) into any existing Sugar 7 On-Demand or On-Site instance.
+Each of these packages are ready to be built, zipped, uploaded and installed using [Module Loader](https://support.sugarcrm.com/Documentation/Sugar_Versions/7.6/Ent/Administration_Guide/Developer_Tools/Module_Loader/) into any existing Sugar 7 On-Demand or On-Site instance.
 
-The `buildPackages.sh` script can be used to zip these packages up easily on Unix based environments.
+The `buildPackages.sh` script can be used to build all these packages easily on Unix based environments.
 
 ## [Contextual iFrame Dashlet](ContextualIFrameDashlet/)
 
@@ -29,3 +29,6 @@ Includes [require.js](http://requirejs.org/) which is BSD / MIT licensed.
 
 Starting point for adding a custom action to existing Sugar layouts that opens a drawer to present a custom UI within an IFrame. Currently it will pass URL parameters with context information (record id and module name) that can be used to drive a lightweight UI integration with an external application. Can be used as-is for a Proof of Concept or Demos and can be easily customized for additional capability.
 
+## [FloatingDivAction](FloatingDivAction/)
+
+Starting point for adding a custom action to footer that adds a floating DIV pane to the Sugar user interface. The advantage is that a floating pane does not re-render as the Sugar user navigates the application. This is a common use case for Telephony or Chat integrations.

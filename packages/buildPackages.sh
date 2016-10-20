@@ -4,7 +4,15 @@
 for i in * ; do
   if [ -d "$i" ]; then
     cd "$i"
-    zip -r --filesync ../$i.zip * -x "*.DS_Store" -x ".git*" -x "__MAC*"
-    cd ..
+    if [ -f "manifest.php" ]
+    then
+      zip -r --filesync ../$i.zip * -x "*.DS_Store" -x ".git*" -x "__MAC*"
+      cd ..
+    else
+      if [ -f "pack.php" ]
+      then
+        php pack.php "1.0.0"
+      fi
+    fi
   fi
 done

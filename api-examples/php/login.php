@@ -17,7 +17,7 @@ $rawPOSTdata = array(
     "password" => "<<PASSWORD>>",
     "client_id" => "sugar",
     "client_secret" => "",
-    "platform" => "base",
+    "platform" => "api",
 );
 curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($rawPOSTdata));
 curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json')); 

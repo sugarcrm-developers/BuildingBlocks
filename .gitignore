@@ -1,3 +1,6 @@
 *.zip
 *.DS_Store
 *.idea
+api-examples/java/.idea
+api-examples/java/target
+
