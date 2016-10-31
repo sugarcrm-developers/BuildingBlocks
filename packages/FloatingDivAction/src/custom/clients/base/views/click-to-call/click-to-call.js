@@ -34,7 +34,7 @@
         $('head').append(popupCss());
         var popup = app.template.get("click-to-call.popup")(this);
         // Add to main content pane of screen
-        $('#content').append(popup);
+        $('#sidecar').append(popup);
         this.$popup = $('#sidecar').find('div.cti-popup');
         // Hide pop up on click of X (close button)
         this.$popup.find('[data-action=close]').click(_.bind(this._closePopup, this));
