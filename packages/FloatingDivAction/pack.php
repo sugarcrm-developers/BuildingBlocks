@@ -61,7 +61,7 @@ $files = new RecursiveIteratorIterator(
 );
 
 foreach ($files as $name => $file) {
-    if ($file->isFile()) {
+    if ($file->isFile() and !empty(pathinfo($file)['filename'])) {
         $fileReal = $file->getRealPath();
         $fileRelative = 'src' . str_replace($basePath, '', $fileReal);
         echo " [*] $fileRelative \n";
