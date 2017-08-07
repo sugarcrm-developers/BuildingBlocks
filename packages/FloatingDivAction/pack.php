@@ -24,7 +24,13 @@ if (empty($version)){
 
 $id = "{$packageID}-{$version}";
 
-$zipFile = "releases/sugarcrm-{$id}.zip";
+$directory = "releases";
+if(!is_dir($directory)){
+    mkdir($directory);
+}
+
+$zipFile = $directory . "/sugarcrm-{$id}.zip";
+
 
 if (file_exists($zipFile)) {
     die("Release $zipFile already exists!\n");
