@@ -33,7 +33,9 @@ $zipFile = $directory . "/sugarcrm-{$id}.zip";
 
 
 if (file_exists($zipFile)) {
-    die("Release $zipFile already exists!\n");
+    die("Error:  Release $zipFile already exists, so a new zip was not created. To generate a new zip, either delete the"
+        . " existing zip file or update the version number in the version file AND then run the script to build the"
+        . " module again. \n");
 }
 
 $manifest = array(
