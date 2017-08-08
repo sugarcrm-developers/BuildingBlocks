@@ -16,5 +16,5 @@ $viewdefs['test_Test']['base']['layout']['records'] = array(
             'view' => 'iframe-view',
         ),
     ),
-    'css_class' => 'main-pane',
+    'css_class' => 'main-pane full-width',
 );
