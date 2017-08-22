@@ -28,4 +28,10 @@ $installdefs = array(
             'to' => 'custom',
         ),
     ),
+    'post_execute' => array(
+        '<basepath>/scripts/cleanup.php',
+    ),
+    'post_uninstall' => array(
+        '<basepath>/scripts/cleanup.php',
+    ),
 );
