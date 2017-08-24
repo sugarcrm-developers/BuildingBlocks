@@ -13,6 +13,7 @@ $manifest = array(
     'is_uninstallable' => true,
     'type' => 'module',
     'version' => 1,
+    'remove_tables' => 'prompt',
 );
 
 
@@ -47,4 +48,10 @@ $installdefs = array(
         'language' => 'en_us',
       ),
   ),
+   'post_execute' => array(
+       '<basepath>/scripts/cleanup.php',
+   ),
+   'post_uninstall' => array(
+       '<basepath>/scripts/cleanup.php',
+   ),
 );

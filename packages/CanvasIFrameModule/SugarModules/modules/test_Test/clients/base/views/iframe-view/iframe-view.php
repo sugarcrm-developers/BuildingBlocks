@@ -6,7 +6,7 @@ $viewdefs['test_Test']['base']['view']['iframe-view'] = array(
     'title' => 'Canvas IFrame',
     'config' => array(
         'url' => '//httpbin.org/get',
-        'width' => '800px',
+        'width' => '100%',
         'height' => '600px',
     ),
 );
