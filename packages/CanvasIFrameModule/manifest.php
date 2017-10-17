@@ -48,10 +48,4 @@ $installdefs = array(
         'language' => 'en_us',
       ),
   ),
-   'post_execute' => array(
-       '<basepath>/scripts/cleanup.php',
-   ),
-   'post_uninstall' => array(
-       '<basepath>/scripts/cleanup.php',
-   ),
 );
