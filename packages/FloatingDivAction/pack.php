@@ -5,7 +5,7 @@
 
  $packageID = "BuildingBlock_FloatingDivExample";
  $packageLabel = "Floating Div Example";
- $supportedVersionRegex = '^7.[^1-5][\d]*.[\d]+.[\d]+$';
+ $supportedVersionRegex = '7\\..*$';
 /******************************/
 
 if (empty($argv[1])) {
@@ -19,8 +19,6 @@ if (empty($argv[1])) {
 if (empty($version)){
     die("Use $argv[0] [version]\n");
 }
-
-
 
 $id = "{$packageID}-{$version}";
 
@@ -56,7 +54,10 @@ $manifest = array(
     ),
 );
 
-$installdefs = array('copy' => array());
+$installdefs = array(
+    'beans' => array (),
+    'id' => $packageID,
+);
 echo "Creating {$zipFile} ... \n";
 
 $zip = new ZipArchive();
@@ -90,5 +91,5 @@ $manifestContent = sprintf(
 $zip->addFromString('manifest.php', $manifestContent);
 $zip->close();
 
-echo "done\n";
+echo "Done creating {$zipFile}\n\n";
 exit(0);

@@ -9,14 +9,33 @@ $supportedVersionRegex = '7\\..*$';
 /******************************/
 
 if (empty($argv[1])) {
+    if (file_exists("version")) {
+        $version = file_get_contents("version");
+    }
+} else {
+    $version = $argv[1];
+}
+
+if (empty($version)){
     die("Use $argv[0] [version]\n");
 }
-$version = $argv[1];
+
 $id = "{$packageID}-{$version}";
-$zipFile = "releases/sugarcrm-{$id}.zip";
-if (file_exists($zipFile)) {
-    die("Release $zipFile already exists!\n");
+
+$directory = "releases";
+if(!is_dir($directory)){
+    mkdir($directory);
 }
+
+$zipFile = $directory . "/sugarcrm-{$id}.zip";
+
+
+if (file_exists($zipFile)) {
+    die("Error:  Release $zipFile already exists, so a new zip was not created. To generate a new zip, either delete the"
+        . " existing zip file or update the version number in the version file AND then run the script to build the"
+        . " module again. \n");
+}
+
 $manifest = array(
     'id' => $packageID,
     'name' => $packageLabel,
@@ -50,6 +69,7 @@ $installdefs = array(
             'language' => 'en_us',
         ),
     ),
+    'id' => $packageID,
 );
 echo "Creating {$zipFile} ... \n";
 $zip = new ZipArchive();
@@ -78,5 +98,5 @@ $manifestContent = sprintf(
 );
 $zip->addFromString('manifest.php', $manifestContent);
 $zip->close();
-echo "done\n";
+echo "Done creating {$zipFile}\n\n";
 exit(0);

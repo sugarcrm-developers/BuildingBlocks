@@ -57,7 +57,10 @@ $manifest = array(
     'acceptable_sugar_flavors' => $acceptableSugarFlavors,
 );
 
-$installdefs = array('copy' => array());
+$installdefs = array(
+    'beans' => array (),
+    'id' => $packageID,
+);
 
 echo "Creating {$zipFile} ... \n";
 $zip = new ZipArchive();
