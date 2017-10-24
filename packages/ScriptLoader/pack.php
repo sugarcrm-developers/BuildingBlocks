@@ -63,9 +63,6 @@ $installdefs = array(
     'post_execute' => array(
         'scripts/cleanup.php',
     ),
-    'post_uninstall' => array(
-        'scripts/cleanup.php',
-    ),
 );
 
 echo "Creating {$zipFile} ... \n";
