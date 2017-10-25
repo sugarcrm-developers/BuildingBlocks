@@ -54,22 +54,11 @@ $manifest = array(
     ),
 );
 $installdefs = array(
-    'beans' => array (
-        array (
-            'module' => 'test_Test',
-            'class' => 'test_Test',
-            'path' => 'modules/test_Test/test_Test.php',
-            'tab' => true,
-        ),
-    ),
-    'language' => array (
-        array (
-            'from' => 'language/application/en_us.lang.php',
-            'to_module' => 'application',
-            'language' => 'en_us',
-        ),
-    ),
+    'beans' => array (),
     'id' => $packageID,
+    'post_execute' => array(
+        'scripts/cleanup.php',
+    ),
 );
 echo "Creating {$zipFile} ... \n";
 $zip = new ZipArchive();

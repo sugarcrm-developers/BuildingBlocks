@@ -10,5 +10,11 @@
  * Copyright (C) SugarCRM Inc. All rights reserved.
  */
 
-$app_list_strings['moduleList']['test_Test'] = 'Canvas IFrame';
-$app_list_strings['moduleListSingular']['test_Test'] = 'Canvas IFrame';
+$viewdefs['base']['layout']['canvas-iframe'] = array(
+    'components' => array(
+        array(
+            'view' => 'canvas-iframe',
+        ),
+    ),
+    'css_class' => 'main-pane',
+);

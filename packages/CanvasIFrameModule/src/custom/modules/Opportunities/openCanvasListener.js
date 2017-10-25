@@ -12,7 +12,7 @@
                 //AND the 'button:create_quote:click' event occurs on the current Context
                 app.controller.context.on('button:custom_button:click', function(){
                     //On click of custom button, go to iframe module route
-                    app.router.navigate('test_Test', {trigger: true});
+                    app.router.navigate('canvas_iframe', {trigger: true});
                 }, this);
             }
         });
