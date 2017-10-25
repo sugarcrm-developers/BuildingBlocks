@@ -3,8 +3,8 @@
 // Copyright 2016 SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
 
 
-$packageID = "BuildingBlock_CanvasIFrameModule";
-$packageLabel = "Canvas IFrame Module";
+$packageID = "BuildingBlock_CanvasIFrame";
+$packageLabel = "Canvas IFrame";
 $supportedVersionRegex = '7\\..*$';
 /******************************/
 
