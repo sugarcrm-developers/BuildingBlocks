@@ -3,9 +3,11 @@
 // Copyright 2016 SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
 
 
- $packageID = "BuildingBlock_FloatingDivExample";
- $packageLabel = "Floating Div Example";
- $supportedVersionRegex = '7\\..*$';
+$packageID = "BuildingBlocks_IFrameDrawerAction";
+$packageLabel = "IFrame Drawer Action";
+$supportedVersionRegex = '7\\..*$';
+$acceptableSugarFlavors = array('PRO','ENT','ULT');
+$description = 'Opens a drawer that displays a custom IFrame';
 /******************************/
 
 if (empty($argv[1])) {
@@ -39,7 +41,7 @@ if (file_exists($zipFile)) {
 $manifest = array(
     'id' => $packageID,
     'name' => $packageLabel,
-    'description' => $packageLabel,
+    'description' => $description,
     'version' => $version,
     'author' => 'SugarCRM, Inc.',
     'is_uninstallable' => 'true',
@@ -52,25 +54,27 @@ $manifest = array(
             $supportedVersionRegex,
         ),
     ),
+    'acceptable_sugar_flavors' => $acceptableSugarFlavors,
 );
 
 $installdefs = array(
     'beans' => array (),
     'id' => $packageID,
+    'post_execute' => array(
+        'scripts/cleanup.php',
+    ),
 );
-echo "Creating {$zipFile} ... \n";
 
+echo "Creating {$zipFile} ... \n";
 $zip = new ZipArchive();
 $zip->open($zipFile, ZipArchive::CREATE);
 $basePath = realpath('src/');
-
 $files = new RecursiveIteratorIterator(
     new RecursiveDirectoryIterator($basePath, RecursiveDirectoryIterator::SKIP_DOTS),
     RecursiveIteratorIterator::LEAVES_ONLY
 );
-
 foreach ($files as $name => $file) {
-    if ($file->isFile() and !empty(pathinfo($file)['filename'])) {
+    if ($file->isFile()) {
         $fileReal = $file->getRealPath();
         $fileRelative = 'src' . str_replace($basePath, '', $fileReal);
         echo " [*] $fileRelative \n";
@@ -81,15 +85,12 @@ foreach ($files as $name => $file) {
         );
     }
 }
-
 $manifestContent = sprintf(
     "<?php\n\$manifest = %s;\n\$installdefs = %s;\n",
     var_export($manifest, true),
     var_export($installdefs, true)
 );
-
 $zip->addFromString('manifest.php', $manifestContent);
 $zip->close();
-
 echo "Done creating {$zipFile}\n\n";
 exit(0);
