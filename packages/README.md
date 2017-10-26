@@ -3,6 +3,9 @@ Each of these packages are ready to be built, zipped, uploaded and installed usi
 
 The `buildPackages.sh` script can be used to build all these packages easily on Unix based environments.
 
+## [Canvas iFrame](CanvasIFrame)
+This package displays an IFrame inside Sugar.
+
 ## [Contextual iFrame Dashlet](ContextualIFrameDashlet/)
 
 iFrame dashlet that additionally will pass URL parameters with context information (record id and module name) that can be used to drive a lightweight UI integration with an external application.  Can be used as-is for a Proof of Concept or Demos and can be easily customized for additional capability.
