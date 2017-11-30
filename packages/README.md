@@ -1,5 +1,5 @@
 # Package Listing
-Each of these packages are ready to be built, zipped, uploaded and installed using [Module Loader](https://support.sugarcrm.com/Documentation/Sugar_Versions/7.6/Ent/Administration_Guide/Developer_Tools/Module_Loader/) into any existing Sugar 7 On-Demand or On-Site instance.
+Each of these packages are ready to be built, zipped, uploaded and installed using [Module Loader](http://support.sugarcrm.com/SmartLinks/Administration_Guide/Developer_Tools/Module_Loader/) into any existing Sugar 7 On-Demand or On-Site instance.
 
 The `buildPackages.sh` script can be used to build all these packages easily on Unix based environments.
 
@@ -12,13 +12,17 @@ iFrame dashlet that additionally will pass URL parameters with context informati
 
 ## [Hello World Dashlet](HelloWorldDashlet/)
 
-Good starting point for building any [Sugar Dashlet](http://support.sugarcrm.com/Documentation/Sugar_Developer/Sugar_Developer_Guide_7.6/UI_Model/Dashlets/Introduction/) based integration from scratch.  Easily customizable for additional capability.
+Good starting point for building any [Sugar Dashlet](http://support.sugarcrm.com/SmartLinks/Developer_Guide/User_Interface/Dashlets/) based integration from scratch.  Easily customizable for additional capability.
 
 ## [Custom Record View Button](CustomRecordViewButton/)
 
-Shows how [Extensions Framework](http://support.sugarcrm.com/Documentation/Sugar_Developer/Sugar_Developer_Guide_7.6/Extension_Framework/) can be used to implement a custom button on a Record View without overriding any core files such as Sidecar View controllers, etc.
+Shows how [Extensions Framework](http://support.sugarcrm.com/SmartLinks/Developer_Guide/Architecture/Extensions/) can be used to implement a custom button on a Record View without overriding any core files such as Sidecar View controllers, etc.
 
 **Install Note:**  You may need to clear your cache after install of this package to ensure that old JavaScript is cleared out of the page.
+
+## [Custom Record View Panel](CustomRecordViewPanel/)
+
+Shows how [Extensions Framework](http://support.sugarcrm.com/SmartLinks/Developer_Guide/Architecture/Extensions/) can be used to implement a custom View to a Record layout without overriding any core files.
 
 ## [CssLoader](CssLoader/)
 Utility package that provides a very simple API for loading CSS into the Sugar application for use in Dashlets or other custom UI components.
