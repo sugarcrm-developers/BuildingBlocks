@@ -1,0 +1,104 @@
+<!--
+/*
+    Copyright 2018 SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ */
+-->
+<div class="longHelpTitle">Identify Users who have had recent changes to their assigned records.</div>
+<div class="summary">
+    <h2>Summary:</h2>
+    This endpoint identifies Users who have had recent changes to their <strong>assigned</strong> records. Returns an array of User IDs based upon the filter criteria.
+</div>
+<h2>Request Arguments</h2>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Required</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            since
+        </td>
+        <td>
+            Timestamp (String)
+        </td>
+        <td>
+            Selects users with records modified since this time.
+        </td>
+        <td>
+            True
+        </td>
+    </tr>
+    <tr>
+        <td>
+            module
+        </td>
+        <td>
+            String
+        </td>
+        <td>
+            A comma separated list of modules that will be checked. Modules must be assignable and therefore contain the <code>assigned_to_user field</code>.
+        </td>
+        <td>
+            True
+        </td>
+    </tr>
+    <tr>
+        <td>
+            include_deleted
+        </td>
+        <td>
+            Boolean
+        </td>
+        <td>
+            Determines if recently deleted records should be included as part of recent changes.
+        </td>
+        <td>
+            True
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<h3>Request</h3>
+<pre class="pre-scrollable">
+http://{site_url}/rest/Users/recentChanges?since=2018-02-14T12:00:00Z&modules=Meetings,Calls&include_deleted=1
+</pre>
+<strong>Note:</strong> GET endpoint parameters are passed in the form of a query string.
+
+
+<h2>Response Arguments</h2>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            &lt;User IDs&gt;
+        </td>
+        <td>
+            Array&ltString&gt;
+        </td>
+        <td>
+            An array of User ID strings.
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<h3>Response</h3>
+<pre class="pre-scrollable">
+[
+    "1",
+    "c8bbe266-11ff-11e8-a823-080027e5359b"
+]
+</pre>
