@@ -59,10 +59,7 @@ $manifest = array(
 
 $installdefs = array(
     'beans' => array (),
-    'id' => $packageID,
-    'post_execute' => array(
-        'scripts/cleanup.php',
-    ),
+    'id' => $packageID
 );
 
 echo "Creating {$zipFile} ... \n";

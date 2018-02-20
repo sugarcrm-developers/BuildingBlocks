@@ -6,7 +6,9 @@
 <div class="longHelpTitle">Identify Users who have had recent changes to their assigned records.</div>
 <div class="summary">
     <h2>Summary:</h2>
-    This endpoint identifies Users who have had recent changes to their <strong>assigned</strong> records. Returns an array of User IDs based upon the filter criteria.
+    This endpoint identifies Users who have had recent changes to their <strong>assigned</strong> records. Returns an
+    array that includes the time on the server when the request was executed and a list of user IDs and usernames for
+    users with changes.
 </div>
 <h2>Request Arguments</h2>
 <table class="table table-hover">
@@ -24,7 +26,7 @@
             since
         </td>
         <td>
-            Timestamp (String)
+            Timestamp (String) of the format <strong>Y-m-d G:i:s T</strong>
         </td>
         <td>
             Selects users with records modified since this time.
@@ -35,7 +37,7 @@
     </tr>
     <tr>
         <td>
-            module
+            modules
         </td>
         <td>
             String
@@ -52,7 +54,7 @@
             include_deleted
         </td>
         <td>
-            Boolean
+            Boolean (0 or 1)
         </td>
         <td>
             Determines if recently deleted records should be included as part of recent changes.
@@ -66,7 +68,7 @@
 
 <h3>Request</h3>
 <pre class="pre-scrollable">
-http://{site_url}/rest/Users/recentChanges?since=2018-02-14T12:00:00Z&modules=Meetings,Calls&include_deleted=1
+http://{site_url}/rest/vXX/Users/recentChanges?since=2018-02-15 00:00:00 UTC&modules=Meetings,Calls&include_deleted=1
 </pre>
 <strong>Note:</strong> GET endpoint parameters are passed in the form of a query string.
 
@@ -89,7 +91,11 @@ http://{site_url}/rest/Users/recentChanges?since=2018-02-14T12:00:00Z&modules=Me
             Array&ltString&gt;
         </td>
         <td>
-            An array of User ID strings.
+            A JSON array containing the following: <ul>
+            <li>The time the query was executed on the server</li>
+            <li>A list of users with recent changes.  Each list item contains the user's id and username. Note that
+            duplicate users will be included in the list if they have changes in more than one module.</li>
+            </ul>
         </td>
     </tr>
     </tbody>
@@ -97,8 +103,57 @@ http://{site_url}/rest/Users/recentChanges?since=2018-02-14T12:00:00Z&modules=Me
 
 <h3>Response</h3>
 <pre class="pre-scrollable">
-[
-    "1",
-    "c8bbe266-11ff-11e8-a823-080027e5359b"
-]
+{
+    "currentTime": "2018-02-21 19:19:07 UTC",
+    "usersWithRecentChanges": [
+        {
+            "assigned_user_id": "seed_chris_id",
+            "user_name": "chris"
+        },
+        {
+            "assigned_user_id": "seed_jim_id",
+            "user_name": "jim"
+        },
+        {
+            "assigned_user_id": "seed_max_id",
+            "user_name": "max"
+        },
+        {
+            "assigned_user_id": "seed_sally_id",
+            "user_name": "sally"
+        },
+        {
+            "assigned_user_id": "seed_sarah_id",
+            "user_name": "sarah"
+        },
+        {
+            "assigned_user_id": "seed_will_id",
+            "user_name": "will"
+        },
+        {
+            "assigned_user_id": "seed_chris_id",
+            "user_name": "chris"
+        },
+        {
+            "assigned_user_id": "seed_jim_id",
+            "user_name": "jim"
+        },
+        {
+            "assigned_user_id": "seed_max_id",
+            "user_name": "max"
+        },
+        {
+            "assigned_user_id": "seed_sally_id",
+            "user_name": "sally"
+        },
+        {
+            "assigned_user_id": "seed_sarah_id",
+            "user_name": "sarah"
+        },
+        {
+            "assigned_user_id": "seed_will_id",
+            "user_name": "will"
+        }
+    ]
+}
 </pre>
