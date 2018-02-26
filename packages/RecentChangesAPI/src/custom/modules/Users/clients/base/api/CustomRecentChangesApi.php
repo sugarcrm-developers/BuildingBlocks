@@ -4,6 +4,7 @@
 use Symfony\Component\Validator\Constraints as Assert;
 use Sugarcrm\Sugarcrm\Security\Validator\Validator;
 use Sugarcrm\Sugarcrm\Security\Validator\Constraints\Mvc;
+use Sugarcrm\Sugarcrm\Security\Validator\Constraints\Delimited;
 
 /**
  * Class CustomRecentChangesApi
@@ -64,16 +65,15 @@ class CustomRecentChangesApi extends SugarApi
 
         // Validate the params
         $sinceParam = $this->validateSinceParam($args['since']);
-        $AddDeletedParam = $this->validateAddDeletedParam($args['add_deleted']);
+        $addDeletedParam = $this->validateAddDeletedParam($args['add_deleted']);
         $modulesParam = $this->validateModulesParam($args['modules']);
 
         // Get the server's current time
-        // TODO:  Is this the right way to get the current server timestamp?
         global $timedate;
         $currentTime = $timedate->getNow()->format($this->dateFormat);
 
         // Query for updated records
-        $arrayOfQueryResults = $this->queryForRecentChanges($sinceParam, $currentTime, $modulesParam, $AddDeletedParam);
+        $arrayOfQueryResults = $this->queryForRecentChanges($sinceParam, $currentTime, $modulesParam, $addDeletedParam);
 
         // Return the formatted results
         return $this->convertToResponseArray($currentTime, $arrayOfQueryResults);
@@ -84,7 +84,7 @@ class CustomRecentChangesApi extends SugarApi
      * and $dateTimeTwo
      * @param $dateTimeOne Search for records updated after this dateTime
      * @param $dateTimeTwo Search for records updated up to and including this dateTime
-     * @param $modules List of modules to query for updates
+     * @param $modules A comma separated list of modules to query for updates
      * @param $addDeleted Whether or not 'deleted' = 0 should be added to Where clause of generated SQL query
      * @return array Array of query results. Each module in $modules will have its own set of results in the array.
      */
@@ -92,84 +92,80 @@ class CustomRecentChangesApi extends SugarApi
     {
         $arrayOfQueryResults = array();
 
+        $modules = explode(',', $modules);
         foreach ($modules as $module) {
             $query = new SugarQuery();
             $query->distinct(true);
-            $query->from(BeanFactory::newBean($module), array('team_security' => true, 'add_deleted' => $addDeleted));
-            //TODO:  I was getting invalid link errors for modules like Accounts and Opportunities when I tried to do a
-            // join instead of a joinTable.  Is there a better way to get the table name than lower casing the module name?
-            $tableName = strtolower($module);
+            $moduleBean = BeanFactory::newBean($module);
+            $query->from($moduleBean, array('add_deleted' => $addDeleted));
+            $moduleTableName = $moduleBean->table_name;
             $query->joinTable('users')->on()
-                ->equalsField("$tableName.assigned_user_id", 'users.id');
+                ->equalsField("$moduleTableName.assigned_user_id", 'users.id');
             $query->select(array('users.id', 'users.user_name'));
             $query->where()->gt('date_modified', $dateTimeOne);
             $query->where()->lte('date_modified', $dateTimeTwo);
             $result = $query->execute();
-            $arrayOfQueryResults[] = $result;
+            $arrayOfQueryResults[$module] = $result;
         }
         return $arrayOfQueryResults;
+    }
+
+    /**
+     * Validates a param meets a given constraint
+     * @param $paramName The name of the param to validate
+     * @param $paramValue The value of the param to validate
+     * @param $constraint The constraint to use to validate the param value
+     * @return mixed The validated param
+     * @throws SugarApiExceptionInvalidParameter if the param does not meet the given constraint
+     * @throws SugarApiExceptionMissingParameter if the param is missing
+     */
+    protected function validateParam($paramName, $paramValue, $constraint){
+        if (empty($paramValue) && $paramValue != '0') {
+            throw new SugarApiExceptionMissingParameter("Missing required parameter: $paramName");
+        }
+
+        $errors = $this->validator->validate($paramValue, $constraint);
+
+        if (count($errors) > 0 ) {
+            throw new SugarApiExceptionInvalidParameter((string)$errors);
+        }
+        return $paramValue;
     }
 
     /**
      * Ensures the since param has been passed and that it uses the correct date format
      * @param $sinceParam The param passed in as an argument
      * @return mixed The validated param
-     * @throws SugarApiExceptionInvalidParameter if the since param is not in the correct date format
-     * @throws SugarApiExceptionMissingParameter if the since param is not passed
      */
     protected function validateSinceParam($sinceParam){
-        if (empty($sinceParam)) {
-            throw new SugarApiExceptionMissingParameter('Missing required parameter: since');
-        }
-
-        $errors = $this->validator->validate($sinceParam, new Assert\DateTime(array('format' => $this->dateFormat)));
-        if (count($errors) > 0) {
-            throw new SugarApiExceptionInvalidParameter((string)$errors . '    since param should be of the format '
-                . $this->dateFormat . '.');
-        }
-        return $sinceParam;
+        $dateConstraint = new Assert\DateTime(array(
+            'format' => $this->dateFormat,
+            'message' => "Param 'since' must be of the format '$this->dateFormat'"));
+        return $this->validateParam("since", $sinceParam, $dateConstraint);
     }
 
     /**
      * Ensures the add_deleted param has been passed and that it is a boolean
-     * @param $AddDeletedParam The param passed in as an argument
+     * @param $addDeletedParam The param passed in as an argument
      * @return mixed The validated param
-     * @throws SugarApiExceptionInvalidParameter if the param is not a boolean
-     * @throws SugarApiExceptionMissingParameter if the param is not passed
      */
-    protected function validateAddDeletedParam($AddDeletedParam){
-        if (empty($AddDeletedParam) && $AddDeletedParam != '0') {
-            throw new SugarApiExceptionMissingParameter('Missing required parameter: add_deleted');
-        }
-
-        $isTrueErrors = $this->validator->validate($AddDeletedParam, new Assert\IsTrue());
-        $isFalseErrors = $this->validator->validate($AddDeletedParam, new Assert\IsFalse());
-        if (count($isTrueErrors) > 0 && count($isFalseErrors) > 0) {
-            throw new SugarApiExceptionInvalidParameter('The value of add_deleted should be set to 0 or 1');
-        }
-        return $AddDeletedParam;
+    protected function validateAddDeletedParam($addDeletedParam){
+        $booleanConstraint = new Assert\Regex(array(
+            'pattern' => '/^[01]$/',
+            'message' => "Param 'add_deleted' must be 0 or 1"));
+        return $this->validateParam("add_deleted", $addDeletedParam, $booleanConstraint);
     }
 
     /**
      * Ensure the modules param has been passed and that it is a comma separated list of valid modules
      * @param $modulesParam A comma separated list of modules
-     * @return array A list of modules
-     * @throws SugarApiExceptionInvalidParameter if any of the modules in the list are not valid
-     * @throws SugarApiExceptionMissingParameter if the param is not passed
+     * @return array The validated param
      */
     protected function validateModulesParam($modulesParam){
-        if (empty($modulesParam)) {
-            throw new SugarApiExceptionMissingParameter('Missing required parameter: modules');
-        }
-
-        $modules = explode(',', $modulesParam);
-        foreach ($modules as $module) {
-            $errors = $this->validator->validate($module, new Mvc\ModuleName());
-            if (count($errors) > 0) {
-                throw new SugarApiExceptionInvalidParameter('Error validating module: ' . (string)$errors);
-            }
-        }
-        return $modules;
+        $moduleConstraint = new Delimited(array(
+            'constraints' => new Mvc\ModuleName(),
+        ));
+        return $this->validateParam("modules", $modulesParam, $moduleConstraint);
     }
 
     /**
@@ -178,10 +174,11 @@ class CustomRecentChangesApi extends SugarApi
      * The response will be in the following format:
      * {
      *      "currentTime": "Y-m-d G:i:s T",
-     *      "usersWithRecentChanges": [
+     *      "records": [
      *          {
-     *              "assigned_user_id": "sample user id",
-     *              "user_name": "the user_name assocated with the above user id"
+     *              "id": "sample user id",
+     *              "name": "the user_name associated with the above user id",
+     *              "_module": "the module where the record changed"
      *          }
      *      ]
      * }
@@ -194,19 +191,19 @@ class CustomRecentChangesApi extends SugarApi
     {
         $users = array();
 
-        //TODO:  Do you want to know which module the update is in as well?
-        foreach($dataArray as $data){
+        foreach($dataArray as $module => $data){
             foreach($data as $obj){
                 $users[] = array(
-                    'assigned_user_id' => $obj['id'],
-                    'user_name' => $obj['user_name']
+                    'id' => $obj['id'],
+                    'name' => $obj['user_name'],
+                    '_module' => $module
                 );
             }
         }
 
         $result = array(
             'currentTime' => $currentTime,
-            'usersWithRecentChanges' => $users
+            'records' => $users
         );
 
         return $result;

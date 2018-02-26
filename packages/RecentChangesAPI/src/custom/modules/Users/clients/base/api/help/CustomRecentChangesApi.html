@@ -51,13 +51,13 @@
     </tr>
     <tr>
         <td>
-            include_deleted
+            add_deleted
         </td>
         <td>
             Boolean (0 or 1)
         </td>
         <td>
-            Determines if recently deleted records should be included as part of recent changes.
+            Whether or not "'deleted' = 0" should be added to Where clause of generated SQL query.
         </td>
         <td>
             True
@@ -68,7 +68,7 @@
 
 <h3>Request</h3>
 <pre class="pre-scrollable">
-http://{site_url}/rest/vXX/Users/recentChanges?since=2018-02-15 00:00:00 UTC&modules=Meetings,Calls&include_deleted=1
+http://{site_url}/rest/vXX/Users/recentChanges?since=2018-02-27 15:09:09 UTC&modules=Meetings,Contacts&add_deleted=1
 </pre>
 <strong>Note:</strong> GET endpoint parameters are passed in the form of a query string.
 
@@ -93,8 +93,8 @@ http://{site_url}/rest/vXX/Users/recentChanges?since=2018-02-15 00:00:00 UTC&mod
         <td>
             A JSON array containing the following: <ul>
             <li>The time the query was executed on the server</li>
-            <li>A list of users with recent changes.  Each list item contains the user's id and username. Note that
-            duplicate users will be included in the list if they have changes in more than one module.</li>
+            <li>A list of records with recent changes.  Each list item contains the user's id, the user's username, and the
+                module where the record was changed.</li>
             </ul>
         </td>
     </tr>
@@ -104,55 +104,27 @@ http://{site_url}/rest/vXX/Users/recentChanges?since=2018-02-15 00:00:00 UTC&mod
 <h3>Response</h3>
 <pre class="pre-scrollable">
 {
-    "currentTime": "2018-02-21 19:19:07 UTC",
-    "usersWithRecentChanges": [
+    "currentTime": "2018-02-26 19:28:39 UTC",
+    "records": [
         {
-            "assigned_user_id": "seed_chris_id",
-            "user_name": "chris"
+            "id": "seed_chris_id",
+            "name": "chris",
+            "_module": "Meetings"
         },
         {
-            "assigned_user_id": "seed_jim_id",
-            "user_name": "jim"
+            "id": "seed_jim_id",
+            "name": "jim",
+            "_module": "Meetings"
         },
         {
-            "assigned_user_id": "seed_max_id",
-            "user_name": "max"
+            "id": "seed_jim_id",
+            "name": "jim",
+            "_module": "Contacts"
         },
         {
-            "assigned_user_id": "seed_sally_id",
-            "user_name": "sally"
-        },
-        {
-            "assigned_user_id": "seed_sarah_id",
-            "user_name": "sarah"
-        },
-        {
-            "assigned_user_id": "seed_will_id",
-            "user_name": "will"
-        },
-        {
-            "assigned_user_id": "seed_chris_id",
-            "user_name": "chris"
-        },
-        {
-            "assigned_user_id": "seed_jim_id",
-            "user_name": "jim"
-        },
-        {
-            "assigned_user_id": "seed_max_id",
-            "user_name": "max"
-        },
-        {
-            "assigned_user_id": "seed_sally_id",
-            "user_name": "sally"
-        },
-        {
-            "assigned_user_id": "seed_sarah_id",
-            "user_name": "sarah"
-        },
-        {
-            "assigned_user_id": "seed_will_id",
-            "user_name": "will"
+            "id": "seed_max_id",
+            "name": "max",
+            "_module": "Contacts"
         }
     ]
 }
