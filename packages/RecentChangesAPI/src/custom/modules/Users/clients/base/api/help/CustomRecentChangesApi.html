@@ -7,8 +7,8 @@
 <div class="summary">
     <h2>Summary:</h2>
     This endpoint identifies Users who have had recent changes to their <strong>assigned</strong> records. Returns an
-    array that includes the time on the server when the request was executed and a list of user IDs and usernames for
-    users with changes.
+    array that includes the time on the server when the request was executed and a list of user IDs, usernames, and
+    changed modules for users with changes.
 </div>
 <h2>Request Arguments</h2>
 <table class="table table-hover">
@@ -26,7 +26,8 @@
             since
         </td>
         <td>
-            Timestamp (String) of the format <strong>Y-m-d G:i:s T</strong>
+            Timestamp (String) of the format <strong>Y-m-d G:i:s T</strong>. For example, 2018-02-27%2015%3A09%3A09%20UTC
+            (url encoded) or 2018-02-27 15:09:09 UTC (decoded).
         </td>
         <td>
             Selects users with records modified since this time.
@@ -68,7 +69,7 @@
 
 <h3>Request</h3>
 <pre class="pre-scrollable">
-http://{site_url}/rest/vXX/Users/recentChanges?since=2018-02-27 15:09:09 UTC&modules=Meetings,Contacts&add_deleted=1
+http://{site_url}/rest/vXX/Users/recentChanges?since=2018-02-27%2015%3A09%3A09%20UTC&modules=Meetings,Contacts&add_deleted=1
 </pre>
 <strong>Note:</strong> GET endpoint parameters are passed in the form of a query string.
 
@@ -93,8 +94,8 @@ http://{site_url}/rest/vXX/Users/recentChanges?since=2018-02-27 15:09:09 UTC&mod
         <td>
             A JSON array containing the following: <ul>
             <li>The time the query was executed on the server</li>
-            <li>A list of records with recent changes.  Each list item contains the user's id, the user's username, and the
-                module where the record was changed.</li>
+            <li>A list of records with recent changes.  Each list item contains the user's id, the user's username, and
+                a list of modules where records were changed.</li>
             </ul>
         </td>
     </tr>
@@ -104,27 +105,22 @@ http://{site_url}/rest/vXX/Users/recentChanges?since=2018-02-27 15:09:09 UTC&mod
 <h3>Response</h3>
 <pre class="pre-scrollable">
 {
-    "currentTime": "2018-02-26 19:28:39 UTC",
+    "currentTime": "2018-02-28 18:41:42 UTC",
     "records": [
         {
-            "id": "seed_chris_id",
-            "name": "chris",
-            "_module": "Meetings"
-        },
-        {
             "id": "seed_jim_id",
             "name": "jim",
-            "_module": "Meetings"
+            "_recentlyChanged": [
+                "Meetings",
+                "Contacts"
+            ]
         },
         {
-            "id": "seed_jim_id",
-            "name": "jim",
-            "_module": "Contacts"
-        },
-        {
-            "id": "seed_max_id",
-            "name": "max",
-            "_module": "Contacts"
+            "id": "seed_sally_id",
+            "name": "sally",
+            "_recentlyChanged": [
+                "Contacts"
+            ]
         }
     ]
 }

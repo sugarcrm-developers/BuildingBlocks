@@ -178,7 +178,7 @@ class CustomRecentChangesApi extends SugarApi
      *          {
      *              "id": "sample user id",
      *              "name": "the user_name associated with the above user id",
-     *              "_module": "the module where the record changed"
+     *              "_recentlyChanged": "array of modules where the user has changes"
      *          }
      *      ]
      * }
@@ -189,23 +189,35 @@ class CustomRecentChangesApi extends SugarApi
      */
     protected function convertToResponseArray($currentTime, $dataArray)
     {
-        $users = array();
-
-        foreach($dataArray as $module => $data){
-            foreach($data as $obj){
-                $users[] = array(
-                    'id' => $obj['id'],
-                    'name' => $obj['user_name'],
-                    '_module' => $module
-                );
+        // Loop through each record in the $dataArray, creating a record in $recordResults for each user
+        $recordResults = array();
+        foreach($dataArray as $module => $users){
+            foreach($users as $user){
+                // If a record for the user already exists in $recordResults, simply add the module to the _recentlyChanged array
+                if($recordResults[$user['id']]){
+                    $recordResults[$user['id']]['_recentlyChanged'][] = $module;
+                } // Else create a new record in $recordResults
+                else {
+                    $recordResults[$user['id']] = array(
+                        'id' => $user['id'],
+                        'name' => $user['user_name'],
+                        '_recentlyChanged' => array($module)
+                    );
+                }
             }
         }
 
-        $result = array(
-            'currentTime' => $currentTime,
-            'records' => $users
-        );
+        // $recordResults uses the user's id as the key for each record in the array. Create a new $prettyRecordResults
+        // array that does not have keys for each record in the array
+        $prettyRecordResults = array();
+        forEach($recordResults as $record){
+            $prettyRecordResults[] = $record;
+        }
 
-        return $result;
+        // Return the current time and the array of records
+        return array(
+            'currentTime' => $currentTime,
+            'records' => $prettyRecordResults
+        );
     }
 }
