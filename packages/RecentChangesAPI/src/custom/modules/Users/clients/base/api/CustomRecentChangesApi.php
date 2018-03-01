@@ -36,10 +36,10 @@ class CustomRecentChangesApi extends SugarApi
     {
         return array(
             'recentChanges' => array(
-                'reqType' => 'GET',
+                'reqType' => 'POST',
                 'path' => array('Users', 'recentChanges'),
                 'method' => 'getRecentChanges',
-                'shortHelp' => 'Identify Users who have had recent changes to their assigned Meeting records.',
+                'shortHelp' => 'Identify Users who have had recent changes to their assigned records.',
                 'longHelp' => 'custom/modules/Users/clients/base/api/help/CustomRecentChangesApi.html',
             ),
         );
@@ -48,15 +48,17 @@ class CustomRecentChangesApi extends SugarApi
     /**
      * This is the function that is used for /Users/recentChanges endpoint
      * @param ServiceBase $api
-     * @param array $args The arguments passed to the GET request. All params are required:
+     * @param array $args The arguments passed to the request. All params are required:
      *      since: the datetime from which you want to get changes
      *      modules: a comma separated list of modules that will be checked
-     *      add_deleted: Whether or not "'deleted' = 0" should be added to Where clause of generated SQL query. Value should be 0 or 1
+     *      include_deleted: Whether or not deleted records should be included in results.
      * @return array JSON array containing the server's current time and a list of users with changes
      * @throws SugarApiExceptionNotAuthorized if the user is not an admin
      */
     public function getRecentChanges(ServiceBase $api, array $args)
     {
+        $GLOBALS["log"]->info("Getting recent changes...");
+
         // Ensure the current user is an admin
         global $current_user;
         if (!$current_user->is_admin) {
@@ -65,7 +67,7 @@ class CustomRecentChangesApi extends SugarApi
 
         // Validate the params
         $sinceParam = $this->validateSinceParam($args['since']);
-        $addDeletedParam = $this->validateAddDeletedParam($args['add_deleted']);
+        $includeDeletedParam = $this->validateIncludeDeletedParam($args['include_deleted']);
         $modulesParam = $this->validateModulesParam($args['modules']);
 
         // Get the server's current time
@@ -73,10 +75,12 @@ class CustomRecentChangesApi extends SugarApi
         $currentTime = $timedate->getNow()->format($this->dateFormat);
 
         // Query for updated records
-        $arrayOfQueryResults = $this->queryForRecentChanges($sinceParam, $currentTime, $modulesParam, $addDeletedParam);
+        $arrayOfQueryResults = $this->queryForRecentChanges($sinceParam, $currentTime, $modulesParam, $includeDeletedParam);
 
         // Return the formatted results
-        return $this->convertToResponseArray($currentTime, $arrayOfQueryResults);
+        $results = $this->convertToResponseArray($currentTime, $arrayOfQueryResults);
+        $GLOBALS["log"]->info("Finished getting recent changes");
+        return $results;
     }
 
     /**
@@ -85,19 +89,19 @@ class CustomRecentChangesApi extends SugarApi
      * @param $dateTimeOne Search for records updated after this dateTime
      * @param $dateTimeTwo Search for records updated up to and including this dateTime
      * @param $modules A comma separated list of modules to query for updates
-     * @param $addDeleted Whether or not 'deleted' = 0 should be added to Where clause of generated SQL query
+     * @param $includeDeleted Whether or not deleted records should be included in results
      * @return array Array of query results. Each module in $modules will have its own set of results in the array.
      */
-    protected function queryForRecentChanges($dateTimeOne, $dateTimeTwo, $modules, $addDeleted)
+    protected function queryForRecentChanges($dateTimeOne, $dateTimeTwo, $modules, $includeDeleted)
     {
         $arrayOfQueryResults = array();
 
         $modules = explode(',', $modules);
         foreach ($modules as $module) {
+            $GLOBALS["log"]->info("Querying for changes in $module...");
             $query = new SugarQuery();
-            $query->distinct(true);
             $moduleBean = BeanFactory::newBean($module);
-            $query->from($moduleBean, array('add_deleted' => $addDeleted));
+            $query->from($moduleBean, array('add_deleted' => !$includeDeleted));
             $moduleTableName = $moduleBean->table_name;
             $query->joinTable('users')->on()
                 ->equalsField("$moduleTableName.assigned_user_id", 'users.id');
@@ -106,6 +110,7 @@ class CustomRecentChangesApi extends SugarApi
             $query->where()->lte('date_modified', $dateTimeTwo);
             $result = $query->execute();
             $arrayOfQueryResults[$module] = $result;
+            $GLOBALS["log"]->info("Finshed querying for changes in $module");
         }
         return $arrayOfQueryResults;
     }
@@ -120,6 +125,7 @@ class CustomRecentChangesApi extends SugarApi
      * @throws SugarApiExceptionMissingParameter if the param is missing
      */
     protected function validateParam($paramName, $paramValue, $constraint){
+        $GLOBALS["log"]->info("Valdiating $paramName...");
         if (empty($paramValue) && $paramValue != '0') {
             throw new SugarApiExceptionMissingParameter("Missing required parameter: $paramName");
         }
@@ -129,6 +135,7 @@ class CustomRecentChangesApi extends SugarApi
         if (count($errors) > 0 ) {
             throw new SugarApiExceptionInvalidParameter((string)$errors);
         }
+        $GLOBALS["log"]->info("Finished valdiating $paramName");
         return $paramValue;
     }
 
@@ -145,15 +152,15 @@ class CustomRecentChangesApi extends SugarApi
     }
 
     /**
-     * Ensures the add_deleted param has been passed and that it is a boolean
-     * @param $addDeletedParam The param passed in as an argument
+     * Ensures the include_deleted param has been passed and that it is a boolean
+     * @param $includeDeletedParam The param passed in as an argument
      * @return mixed The validated param
      */
-    protected function validateAddDeletedParam($addDeletedParam){
+    protected function validateIncludeDeletedParam($includeDeletedParam){
         $booleanConstraint = new Assert\Regex(array(
             'pattern' => '/^[01]$/',
-            'message' => "Param 'add_deleted' must be 0 or 1"));
-        return $this->validateParam("add_deleted", $addDeletedParam, $booleanConstraint);
+            'message' => "Param 'include_deleted' must be 0 or 1"));
+        return $this->validateParam("include_deleted", $includeDeletedParam, $booleanConstraint);
     }
 
     /**
@@ -177,8 +184,13 @@ class CustomRecentChangesApi extends SugarApi
      *      "records": [
      *          {
      *              "id": "sample user id",
-     *              "name": "the user_name associated with the above user id",
-     *              "_recentlyChanged": "array of modules where the user has changes"
+     *              "user_name": "the user_name associated with the above user id",
+     *              "_recentlyChanged": [
+     *                  {
+     *                      "module": "module where the user has changes",
+     *                      "count": the number of records assigned to this user that have changes in this module
+     *                  }
+     *              ]
      *          }
      *      ]
      * }
@@ -189,30 +201,47 @@ class CustomRecentChangesApi extends SugarApi
      */
     protected function convertToResponseArray($currentTime, $dataArray)
     {
+        $GLOBALS["log"]->info("Formatting results...");
         // Loop through each record in the $dataArray, creating a record in $recordResults for each user
         $recordResults = array();
         foreach($dataArray as $module => $users){
             foreach($users as $user){
-                // If a record for the user already exists in $recordResults, simply add the module to the _recentlyChanged array
-                if($recordResults[$user['id']]){
-                    $recordResults[$user['id']]['_recentlyChanged'][] = $module;
-                } // Else create a new record in $recordResults
+                // If a record for the user already exists in $recordResults for this module, increase the module count
+                if($recordResults[$user['id']] && $recordResults[$user['id']]['_recentlyChanged'][$module]) {
+                    $recordResults[$user['id']]['_recentlyChanged'][$module]['count'] =
+                        $recordResults[$user['id']]['_recentlyChanged'][$module]['count'] + 1;
+                } // Else if a record for the user already exists (meaning this is a new module for this user),
+                  // add the module to the user's results
+                else if ($recordResults[$user['id']]) {
+                    $recordResults[$user['id']]['_recentlyChanged'][$module] = array('module' => $module, 'count' => 1);
+                } // Else this is a new user so create a new record in $recordResults
                 else {
                     $recordResults[$user['id']] = array(
                         'id' => $user['id'],
-                        'name' => $user['user_name'],
-                        '_recentlyChanged' => array($module)
+                        'user_name' => $user['user_name'],
                     );
+                    $recordResults[$user['id']]['_recentlyChanged'][$module] = array('module' => $module, 'count' => 1);
                 }
             }
         }
 
-        // $recordResults uses the user's id as the key for each record in the array. Create a new $prettyRecordResults
-        // array that does not have keys for each record in the array
+        // $recordResults uses the user's id as the key for each record in the array and $recentlyChanged uses the module
+        // name as the key for each record in the array.  Create a new $prettyRecordResult array that does not have keys
+        // for items in the array
         $prettyRecordResults = array();
         forEach($recordResults as $record){
+            $recentlyChanged = $record['_recentlyChanged'];
+            $prettyRecentlyChanged = array();
+            forEach($recentlyChanged as $module){
+                $prettyRecentlyChanged[] = $module;
+                $GLOBALS["log"]->info("Found " . $module["count"] . " change(s) in module " . $module["module"]);
+            }
+            $record['_recentlyChanged'] = $prettyRecentlyChanged;
+
             $prettyRecordResults[] = $record;
         }
+
+        $GLOBALS["log"]->info("Finished formatting results");
 
         // Return the current time and the array of records
         return array(
