@@ -26,7 +26,7 @@
             since
         </td>
         <td>
-            Timestamp (String) of the format <strong>Y-m-d G:i:s T</strong>.
+            Timestamp (String) in the format of <strong>Y-m-d\TH:i:sP</strong> (ATOM/RFC3339).
         </td>
         <td>
             Selects users with records modified since this time.
@@ -66,17 +66,23 @@
     </tbody>
 </table>
 
-<h3>Request</h3>
+<h3>POST Request</h3>
 <pre class="pre-scrollable">
-http://{site_url}/rest/vXX/Users/recentChanges
+POST http://{site_url}/rest/vXX/Users/recentChanges
 
 {
-	"since":"2018-03-01 19:11:30 UTC",
+	"since":"2018-02-17T22:00:00+00:00",
 	"modules":"Meetings,Contacts",
 	"include_deleted":"1"
 }
+
 </pre>
 
+<h3>GET Request</h3>
+<pre class="pre-scrollable">
+GET http://{site_url}/rest/vXX/Users/recentChanges?since=2018-02-17T22%3A00%3A00%2B00%3A00&amp;modules=Meetings,Calls&amp;include_deleted=1
+
+</pre>
 
 <h2>Response Arguments</h2>
 <table class="table table-hover">
@@ -101,7 +107,7 @@ http://{site_url}/rest/vXX/Users/recentChanges
             <li>A list of records with recent changes.  Each list item contains the user's id and the user's username.
                 Each list item also contains a list of recently changed modules that includes a count of the number
                 of records assigned to that user that were changed in each module.</li>
-            </ul>
+        </ul>
         </td>
     </tr>
     </tbody>
@@ -110,7 +116,7 @@ http://{site_url}/rest/vXX/Users/recentChanges
 <h3>Response</h3>
 <pre class="pre-scrollable">
 {
-    "currentTime": "2018-03-01 19:44:18 UTC",
+    "currentTime": "2018-03-01T19:44:18+00:00",
     "records": [
         {
             "id": "seed_jim_id",

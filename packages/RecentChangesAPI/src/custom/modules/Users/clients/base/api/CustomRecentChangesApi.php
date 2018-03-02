@@ -23,7 +23,7 @@ class CustomRecentChangesApi extends SugarApi
 
     function __construct()
     {
-        $this->dateFormat = 'Y-m-d G:i:s T';
+        $this->dateFormat = DateTime::ATOM; //'Y-m-d\TH:i:sP';
         $this->validator = Validator::getService();
     }
 
@@ -36,7 +36,7 @@ class CustomRecentChangesApi extends SugarApi
     {
         return array(
             'recentChanges' => array(
-                'reqType' => 'POST',
+                'reqType' => array('POST', 'GET'),
                 'path' => array('Users', 'recentChanges'),
                 'method' => 'getRecentChanges',
                 'shortHelp' => 'Identify Users who have had recent changes to their assigned records.',
@@ -57,11 +57,13 @@ class CustomRecentChangesApi extends SugarApi
      */
     public function getRecentChanges(ServiceBase $api, array $args)
     {
-        $GLOBALS["log"]->info("Getting recent changes...");
+        $startTimeMicros = microtime(true);
+        $this->writeLog('START');
 
         // Ensure the current user is an admin
         global $current_user;
         if (!$current_user->is_admin) {
+            $this->writeLog('Not an admin, returning 403 code');
             throw new SugarApiExceptionNotAuthorized('You do not have admin permissions');
         }
 
@@ -72,33 +74,37 @@ class CustomRecentChangesApi extends SugarApi
 
         // Get the server's current time
         global $timedate;
-        $currentTime = $timedate->getNow()->format($this->dateFormat);
+        $currentTime = $timedate->getNow();
+
+        // Convert $sinceParam into a SugarDateTime object
+        $sinceParam = $timedate::fromTimestamp(DateTime::createFromFormat($this->dateFormat,$sinceParam)->getTimestamp());
 
         // Query for updated records
-        $arrayOfQueryResults = $this->queryForRecentChanges($sinceParam, $currentTime, $modulesParam, $includeDeletedParam);
+        $arrayOfQueryResults = $this->queryForRecentChanges($sinceParam->asDb(), $currentTime->asDb(), $modulesParam, (boolean)$includeDeletedParam);
 
         // Return the formatted results
-        $results = $this->convertToResponseArray($currentTime, $arrayOfQueryResults);
-        $GLOBALS["log"]->info("Finished getting recent changes");
+        $results = $this->convertToResponseArray($currentTime->format($this->dateFormat), $arrayOfQueryResults);
+        $runTime = microtime(true) - $startTimeMicros;
+        $this->writeLog("FINISHED in $runTime seconds");
         return $results;
     }
 
     /**
      * Query for the list of user_ids and associated user_names for users who have records updated between $dateTimeOne
      * and $dateTimeTwo
-     * @param $dateTimeOne Search for records updated after this dateTime
-     * @param $dateTimeTwo Search for records updated up to and including this dateTime
-     * @param $modules A comma separated list of modules to query for updates
-     * @param $includeDeleted Whether or not deleted records should be included in results
+     * @param $dateTimeOne string Search for records updated after this dateTime
+     * @param $dateTimeTwo string Search for records updated up to and including this dateTime
+     * @param $modules string A comma separated list of modules to query for updates
+     * @param $includeDeleted boolean Whether or not deleted records should be included in results
      * @return array Array of query results. Each module in $modules will have its own set of results in the array.
      */
     protected function queryForRecentChanges($dateTimeOne, $dateTimeTwo, $modules, $includeDeleted)
     {
         $arrayOfQueryResults = array();
-
         $modules = explode(',', $modules);
         foreach ($modules as $module) {
-            $GLOBALS["log"]->info("Querying for changes in $module...");
+            $startTime = microtime(true);
+            $this->writeLog("Querying for changes in $module...");
             $query = new SugarQuery();
             $moduleBean = BeanFactory::newBean($module);
             $query->from($moduleBean, array('add_deleted' => !$includeDeleted));
@@ -110,7 +116,7 @@ class CustomRecentChangesApi extends SugarApi
             $query->where()->lte('date_modified', $dateTimeTwo);
             $result = $query->execute();
             $arrayOfQueryResults[$module] = $result;
-            $GLOBALS["log"]->info("Finshed querying for changes in $module");
+            $this->writeLog("Finished querying for changes in $module in " . (microtime(true) - $startTime) . " seconds");
         }
         return $arrayOfQueryResults;
     }
@@ -125,7 +131,7 @@ class CustomRecentChangesApi extends SugarApi
      * @throws SugarApiExceptionMissingParameter if the param is missing
      */
     protected function validateParam($paramName, $paramValue, $constraint){
-        $GLOBALS["log"]->info("Valdiating $paramName...");
+        $this->writeLog("Validating $paramName...");
         if (empty($paramValue) && $paramValue != '0') {
             throw new SugarApiExceptionMissingParameter("Missing required parameter: $paramName");
         }
@@ -135,13 +141,13 @@ class CustomRecentChangesApi extends SugarApi
         if (count($errors) > 0 ) {
             throw new SugarApiExceptionInvalidParameter((string)$errors);
         }
-        $GLOBALS["log"]->info("Finished valdiating $paramName");
+        $this->writeLog("Finished validating $paramName");
         return $paramValue;
     }
 
     /**
      * Ensures the since param has been passed and that it uses the correct date format
-     * @param $sinceParam The param passed in as an argument
+     * @param $sinceParam string The param passed in as an argument
      * @return mixed The validated param
      */
     protected function validateSinceParam($sinceParam){
@@ -153,7 +159,7 @@ class CustomRecentChangesApi extends SugarApi
 
     /**
      * Ensures the include_deleted param has been passed and that it is a boolean
-     * @param $includeDeletedParam The param passed in as an argument
+     * @param $includeDeletedParam string The param passed in as an argument
      * @return mixed The validated param
      */
     protected function validateIncludeDeletedParam($includeDeletedParam){
@@ -165,7 +171,7 @@ class CustomRecentChangesApi extends SugarApi
 
     /**
      * Ensure the modules param has been passed and that it is a comma separated list of valid modules
-     * @param $modulesParam A comma separated list of modules
+     * @param $modulesParam string A comma separated list of modules
      * @return array The validated param
      */
     protected function validateModulesParam($modulesParam){
@@ -180,7 +186,7 @@ class CustomRecentChangesApi extends SugarApi
      *
      * The response will be in the following format:
      * {
-     *      "currentTime": "Y-m-d G:i:s T",
+     *      "currentTime": "Y-m-d\TH:i:sP",
      *      "records": [
      *          {
      *              "id": "sample user id",
@@ -195,24 +201,24 @@ class CustomRecentChangesApi extends SugarApi
      *      ]
      * }
      *
-     * @param $currentTime The current datetime that was used as part of the query
-     * @param $data Array of data results returned from queries
-     * @return array The query response data formatted as a JSON array
+     * @param $currentTime string The current datetime that was used as part of the query
+     * @param $dataArray array Array of data results returned from queries
+     * @return array The query response data formatted to be serialized as JSON
      */
     protected function convertToResponseArray($currentTime, $dataArray)
     {
-        $GLOBALS["log"]->info("Formatting results...");
+        $this->writeLog("Formatting results...");
         // Loop through each record in the $dataArray, creating a record in $recordResults for each user
         $recordResults = array();
         foreach($dataArray as $module => $users){
             foreach($users as $user){
                 // If a record for the user already exists in $recordResults for this module, increase the module count
-                if($recordResults[$user['id']] && $recordResults[$user['id']]['_recentlyChanged'][$module]) {
+                if(isset($recordResults[$user['id']]) && $recordResults[$user['id']]['_recentlyChanged'][$module]) {
                     $recordResults[$user['id']]['_recentlyChanged'][$module]['count'] =
                         $recordResults[$user['id']]['_recentlyChanged'][$module]['count'] + 1;
                 } // Else if a record for the user already exists (meaning this is a new module for this user),
-                  // add the module to the user's results
-                else if ($recordResults[$user['id']]) {
+                // add the module to the user's results
+                else if (isset($recordResults[$user['id']])) {
                     $recordResults[$user['id']]['_recentlyChanged'][$module] = array('module' => $module, 'count' => 1);
                 } // Else this is a new user so create a new record in $recordResults
                 else {
@@ -234,19 +240,28 @@ class CustomRecentChangesApi extends SugarApi
             $prettyRecentlyChanged = array();
             forEach($recentlyChanged as $module){
                 $prettyRecentlyChanged[] = $module;
-                $GLOBALS["log"]->info("Found " . $module["count"] . " change(s) in module " . $module["module"]);
+                $this->writeLog($record["user_name"] . " has " . $module["count"] . " change(s) in module " . $module["module"]);
             }
             $record['_recentlyChanged'] = $prettyRecentlyChanged;
 
             $prettyRecordResults[] = $record;
         }
 
-        $GLOBALS["log"]->info("Finished formatting results");
+        $this->writeLog("Finished formatting results");
 
         // Return the current time and the array of records
         return array(
             'currentTime' => $currentTime,
             'records' => $prettyRecordResults
         );
+    }
+
+    /**
+     * Utility for logging messages to sugarcrm log file associated with this custom REST API.
+     * Ensures that messages are created consistently (and can be easily found).
+     * @param $message string Message to write to sugarcrm log.
+     */
+    protected function writeLog($message){
+        $GLOBALS['log']->info(basename(__FILE__) . ' ' . $message);
     }
 }
