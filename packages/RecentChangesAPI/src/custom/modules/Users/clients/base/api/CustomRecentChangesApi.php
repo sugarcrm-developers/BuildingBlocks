@@ -5,6 +5,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Sugarcrm\Sugarcrm\Security\Validator\Validator;
 use Sugarcrm\Sugarcrm\Security\Validator\Constraints\Mvc;
 use Sugarcrm\Sugarcrm\Security\Validator\Constraints\Delimited;
+use Symfony\Component\Validator\Exception\InvalidOptionsException;
 
 /**
  * Class CustomRecentChangesApi
@@ -42,6 +43,7 @@ class CustomRecentChangesApi extends SugarApi
                 'shortHelp' => 'Identify Users who have had recent changes to their assigned records.',
                 'longHelp' => 'custom/modules/Users/clients/base/api/help/CustomRecentChangesApi.html',
             ),
+            //TODO: add a second listing here
         );
     }
 
@@ -151,10 +153,27 @@ class CustomRecentChangesApi extends SugarApi
      * @return mixed The validated param
      */
     protected function validateSinceParam($sinceParam){
-        $dateConstraint = new Assert\DateTime(array(
-            'format' => $this->dateFormat,
-            'message' => "Param 'since' must be of the format '$this->dateFormat'"));
-        return $this->validateParam("since", $sinceParam, $dateConstraint);
+        try{
+            # The DateTime constraint with a format option is available beginning with Symfony 3.1
+            # If possible, we want to use the DateTime constraint
+            $dateConstraint = new Assert\DateTime(array(
+                'format' => $this->dateFormat,
+                'message' => "Param 'since' must be of the format '$this->dateFormat'"));
+            return $this->validateParam("since", $sinceParam, $dateConstraint);
+        }
+            # If the DateTime constraint with a format option is not available, we will validate in a different way
+        catch (InvalidOptionsException $e){
+
+            # Validate the param is a string
+            $stringConstraint = new Assert\Type('String');
+            $this->validateParam("since", $sinceParam, $stringConstraint);
+
+            # Ensure we can create a DateTime from the $sinceParam
+            if (DateTime::createFromFormat($this->dateFormat, $sinceParam) === false){
+                throw new SugarApiExceptionInvalidParameter("Unable to generate date in the format of $this->dateFormat from $sinceParam");
+            }
+            return $sinceParam;
+        }
     }
 
     /**
