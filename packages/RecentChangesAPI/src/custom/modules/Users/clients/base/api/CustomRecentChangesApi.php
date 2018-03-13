@@ -161,7 +161,7 @@ class CustomRecentChangesApi extends SugarApi
                 'message' => "Param 'since' must be of the format '$this->dateFormat'"));
             return $this->validateParam("since", $sinceParam, $dateConstraint);
         }
-            # If the DateTime constraint is not available, we will validate in a different way
+            # If the DateTime constraint with a format option is not available, we will validate in a different way
         catch (InvalidOptionsException $e){
 
             # Validate the param is a string
