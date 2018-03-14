@@ -1,0 +1,141 @@
+<!--
+/*
+    Copyright 2018 SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
+ */
+-->
+<div class="longHelpTitle">Identify Users who have had recent changes to their assigned records.</div>
+<div class="summary">
+    <h2>Summary:</h2>
+    This endpoint identifies Users who have had recent changes to their <strong>assigned</strong> records. Returns an
+    array that includes the time on the server when the request was executed and a list of user IDs, usernames, and
+    changed modules for users with changes.
+</div>
+<h2>Request Arguments</h2>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Required</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            since
+        </td>
+        <td>
+            Timestamp (String) in the format of <strong>Y-m-d\TH:i:sP</strong> (ATOM/RFC3339).
+        </td>
+        <td>
+            Selects users with records modified since this time.
+        </td>
+        <td>
+            True
+        </td>
+    </tr>
+    <tr>
+        <td>
+            modules
+        </td>
+        <td>
+            String
+        </td>
+        <td>
+            A comma separated list of modules that will be checked. Modules must be assignable and therefore contain the <code>assigned_to_user field</code>.
+        </td>
+        <td>
+            True
+        </td>
+    </tr>
+    <tr>
+        <td>
+            include_deleted
+        </td>
+        <td>
+            Boolean (0 or 1)
+        </td>
+        <td>
+            Whether or not deleted records should be included in results.
+        </td>
+        <td>
+            True
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<h3>POST Request</h3>
+<pre class="pre-scrollable">
+POST http://{site_url}/rest/vXX/Users/recentChanges
+
+{
+	"since":"2018-02-17T22:00:00+00:00",
+	"modules":"Meetings,Contacts",
+	"include_deleted":"1"
+}
+
+</pre>
+
+<h2>Response Arguments</h2>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            &lt;User IDs&gt;
+        </td>
+        <td>
+            Array&ltString&gt;
+        </td>
+        <td>
+            A JSON array containing the following: <ul>
+            <li>The time the query was executed on the server</li>
+            <li>A list of records with recent changes.  Each list item contains the user's id and the user's username.
+                Each list item also contains a list of recently changed modules that includes a count of the number
+                of records assigned to that user that were changed in each module.</li>
+        </ul>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<h3>Response</h3>
+<pre class="pre-scrollable">
+{
+    "currentTime": "2018-03-01T19:44:18+00:00",
+    "records": [
+        {
+            "id": "seed_jim_id",
+            "user_name": "jim",
+            "_recentlyChanged": [
+                {
+                    "module": "Meetings",
+                    "count": 5
+                },
+                {
+                    "module": "Contacts",
+                    "count": 3
+                }
+            ]
+        },
+        {
+            "id": "seed_sally_id",
+            "user_name": "sally",
+            "_recentlyChanged": [
+                {
+                    "module": "Contacts",
+                    "count": 2
+                }
+            ]
+        }
+    ]
+}
+</pre>

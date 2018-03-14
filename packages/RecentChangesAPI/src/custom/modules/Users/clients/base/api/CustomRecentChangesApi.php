@@ -36,14 +36,21 @@ class CustomRecentChangesApi extends SugarApi
     public function registerApiRest()
     {
         return array(
-            'recentChanges' => array(
-                'reqType' => array('POST', 'GET'),
+            'recentChangesPost' => array(
+                'reqType' => array('POST'),
                 'path' => array('Users', 'recentChanges'),
                 'method' => 'getRecentChanges',
                 'shortHelp' => 'Identify Users who have had recent changes to their assigned records.',
-                'longHelp' => 'custom/modules/Users/clients/base/api/help/CustomRecentChangesApi.html',
+                'longHelp' => 'custom/modules/Users/clients/base/api/help/CustomRecentChangesApiPost.html',
             ),
-            //TODO: add a second listing here
+            'recentChangesGet' => array(
+                'reqType' => array('GET'),
+                'path' => array('Users', 'recentChanges'),
+                'method' => 'getRecentChanges',
+                'shortHelp' => 'Identify Users who have had recent changes to their assigned records.',
+                'longHelp' => 'custom/modules/Users/clients/base/api/help/CustomRecentChangesApiGet.html',
+            ),
+
         );
     }
 
