@@ -5,7 +5,7 @@
 
 $packageID = "BuildingBlock_CustomRecordViewPanel";
 $packageLabel = "Custom Panel on the Record View";
-$supportedVersionRegex = '7\\..*$';
+$supportedVersionRegex = '(8|7)\\..*$';
 $acceptableSugarFlavors = array('PRO','ENT','ULT');
 $description = 'Package that shows how you can add a custom Panel to a modules Record View using Extensions Framework.';
 /******************************/
@@ -78,7 +78,7 @@ foreach ($files as $name => $file) {
         $zip->addFile($fileReal, $fileRelative);
         $installdefs['copy'][] = array(
             'from' => '<basepath>/' . $fileRelative,
-            'to' => preg_replace('/^src\/(.*)/', '$1', $fileRelative),
+            'to' => preg_replace('/^src[\/\\\](.*)/', '$1', $fileRelative),
         );
     }
 }

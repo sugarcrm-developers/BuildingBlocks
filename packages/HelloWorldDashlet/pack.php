@@ -5,7 +5,7 @@
 
 $packageID = "BuildingBlock_HelloWorldDashlet";
 $packageLabel = "Hello World Dashlet";
-$supportedVersionRegex = '7\\..*$';
+$supportedVersionRegex = '(8|7)\\..*$';
 $acceptableSugarFlavors = array('PRO','ENT','ULT');
 $description = 'Package for a basic Sugar Dashlet';
 /******************************/
@@ -78,7 +78,7 @@ foreach ($files as $name => $file) {
         $zip->addFile($fileReal, $fileRelative);
         $installdefs['copy'][] = array(
             'from' => '<basepath>/' . $fileRelative,
-            'to' => preg_replace('/^src\/(.*)/', '$1', $fileRelative),
+            'to' => preg_replace('/^src[\/\\\](.*)/', '$1', $fileRelative),
         );
     }
 }
