@@ -5,7 +5,7 @@
 
 $packageID = "BuildingBlocks_IFrameDrawerAction";
 $packageLabel = "IFrame Drawer Action";
-$supportedVersionRegex = '7\\..*$';
+$supportedVersionRegex = '(8|7)\\..*$';
 $acceptableSugarFlavors = array('PRO','ENT','ULT');
 $description = 'Opens a drawer that displays a custom IFrame';
 /******************************/
@@ -81,7 +81,7 @@ foreach ($files as $name => $file) {
         $zip->addFile($fileReal, $fileRelative);
         $installdefs['copy'][] = array(
             'from' => '<basepath>/' . $fileRelative,
-            'to' => preg_replace('/^src\/(.*)/', '$1', $fileRelative),
+            'to' => preg_replace('/^src[\/\\\](.*)/', '$1', $fileRelative),
         );
     }
 }

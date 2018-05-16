@@ -5,7 +5,7 @@
 
 $packageID = "BuildingBlock_CanvasIFrame";
 $packageLabel = "Canvas IFrame";
-$supportedVersionRegex = '7\\..*$';
+$supportedVersionRegex = '(8|7)\\..*$';
 /******************************/
 
 if (empty($argv[1])) {
@@ -76,7 +76,7 @@ foreach ($files as $name => $file) {
         $zip->addFile($fileReal, $fileRelative);
         $installdefs['copy'][] = array(
             'from' => '<basepath>/' . $fileRelative,
-            'to' => preg_replace('/^src\/(.*)/', '$1', $fileRelative),
+            'to' => preg_replace('/^src[\/\\\](.*)/', '$1', $fileRelative),
         );
     }
 }

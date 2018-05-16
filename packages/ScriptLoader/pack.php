@@ -5,7 +5,7 @@
 
 $packageID = "BuildingBlock_ScriptLoader";
 $packageLabel = "ScriptLoader";
-$supportedVersionRegex = '7\\..*$';
+$supportedVersionRegex = '(8|7)\\..*$';
 $acceptableSugarFlavors = array('PRO','ENT','ULT');
 $description = 'Loading custom JavaScript into Sugar made easy.';
 /******************************/
@@ -81,7 +81,7 @@ foreach ($files as $name => $file) {
         $zip->addFile($fileReal, $fileRelative);
         $installdefs['copy'][] = array(
             'from' => '<basepath>/' . $fileRelative,
-            'to' => preg_replace('/^src\/(.*)/', '$1', $fileRelative),
+            'to' => preg_replace('/^src[\/\\\](.*)/', '$1', $fileRelative),
         );
     }
 }

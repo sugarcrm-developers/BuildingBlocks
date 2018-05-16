@@ -5,7 +5,7 @@
 
  $packageID = "BuildingBlock_FloatingDivExample";
  $packageLabel = "Floating Div Example";
- $supportedVersionRegex = '7\\..*$';
+ $supportedVersionRegex = '(8|7)\\..*$';
 /******************************/
 
 if (empty($argv[1])) {
@@ -77,7 +77,7 @@ foreach ($files as $name => $file) {
         $zip->addFile($fileReal, $fileRelative);
         $installdefs['copy'][] = array(
             'from' => '<basepath>/' . $fileRelative,
-            'to' => preg_replace('/^src\/(.*)/', '$1', $fileRelative),
+            'to' => preg_replace('/^src[\/\\\](.*)/', '$1', $fileRelative),
         );
     }
 }
