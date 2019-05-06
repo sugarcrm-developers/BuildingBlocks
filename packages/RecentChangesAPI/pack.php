@@ -5,7 +5,7 @@
 
 $packageID = "BuildingBlock_RecentChangesAPI";
 $packageLabel = "RecentChangesAPI";
-$supportedVersionRegex = '(8\..*|7\.(9|10|11)\..*)';
+$supportedVersionRegex = '(9|8\..*|7\.(9|10|11)\..*)';
 $acceptableSugarFlavors = array('PRO','ENT','ULT');
 $description = 'Adds a REST API endpoint that makes it easy to identify Users who have had recent changes to their assigned records.';
 /******************************/
