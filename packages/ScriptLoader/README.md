@@ -34,4 +34,4 @@ Includes [require.js](http://requirejs.org/) which is BSD / MIT licensed.
 ````
 ## Example
 
-For an example of how to use the Script Loader, see [Using Script and CSS loading plug-ins for easy Sugar integrations](https://developer.sugarcrm.com/2016/02/01/using-script-and-css-loading-plug-ins-for-easy-sugar-integrations/).
+For an example of how to use the Script Loader, see [Using Script and CSS loading plug-ins for easy Sugar integrations](https://community.sugarcrm.com/community/developer/blog/2016/02/01/using-script-and-css-loading-plug-ins-for-easy-sugar-integrations).
