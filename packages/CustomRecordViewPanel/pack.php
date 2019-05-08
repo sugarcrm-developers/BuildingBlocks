@@ -5,7 +5,7 @@
 
 $packageID = "BuildingBlock_CustomRecordViewPanel";
 $packageLabel = "Custom Panel on the Record View";
-$supportedVersionRegex = '(8|7)\\..*$';
+$supportedVersionRegex = '(9|8|7)\\..*$';
 $acceptableSugarFlavors = array('PRO','ENT','ULT');
 $description = 'Package that shows how you can add a custom Panel to a modules Record View using Extensions Framework.';
 /******************************/

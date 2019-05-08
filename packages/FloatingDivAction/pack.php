@@ -5,7 +5,7 @@
 
  $packageID = "BuildingBlock_FloatingDivExample";
  $packageLabel = "Floating Div Example";
- $supportedVersionRegex = '(8|7)\\..*$';
+ $supportedVersionRegex = '(9|8|7)\\..*$';
 /******************************/
 
 if (empty($argv[1])) {

@@ -5,7 +5,7 @@
 
 $packageID = "BuildingBlock_CssLoader";
 $packageLabel = "CssLoader";
-$supportedVersionRegex = '(8|7)\\..*$';
+$supportedVersionRegex = '(9|8|7)\\..*$';
 $acceptableSugarFlavors = array('PRO','ENT','ULT');
 $description = 'Loading custom CSS into Sugar made easy';
 /******************************/

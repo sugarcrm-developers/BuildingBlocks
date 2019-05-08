@@ -5,7 +5,7 @@
 
 $packageID = "BuildingBlock_ContextualIFrameDashlet";
 $packageLabel = "Contextual iFrame Dashlet package";
-$supportedVersionRegex = '(8|7)\\..*$';
+$supportedVersionRegex = '(9|8|7)\\..*$';
 $acceptableSugarFlavors = array('PRO','ENT','ULT');
 $description = 'Package for a configurable contextual iFrame Sugar Dashlet';
 /******************************/

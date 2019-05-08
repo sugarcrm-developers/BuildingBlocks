@@ -5,7 +5,7 @@
 
 $packageID = "BuildingBlock_CustomRecordViewButton";
 $packageLabel = "Custom Button on the Record View";
-$supportedVersionRegex = '(8|7)\\..*$';
+$supportedVersionRegex = '(9|8|7)\\..*$';
 $acceptableSugarFlavors = array('PRO','ENT','ULT');
 $description = 'Package that shows how you can add a custom Button to a modules Record View using Extensions Framework.';
 /******************************/
