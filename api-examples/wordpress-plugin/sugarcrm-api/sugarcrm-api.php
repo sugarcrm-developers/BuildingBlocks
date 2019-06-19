@@ -30,11 +30,11 @@ function auth_to_sugar($usrnm, $pwrd, $url, $version) {
 
 		// auth token empty so use refresh token and replace auth token and refresh token
 		$api_path_auth = "/oauth2/token";
-		$auth_url = $url . '/rest/v' . $version . $api_path_auth;
+		$auth_url = sanitize_text_field($url) . '/rest/v' . sanitize_text_field($version) . $api_path_auth;
 		log_it($auth_url, "auth_url");
 		$return_auth_key = '';
-		$sugar_username = $usrnm;
-		$sugar_password = $pwrd;
+		$sugar_username = sanitize_text_field($usrnm);
+		$sugar_password = sanitize_text_field($pwrd);
 
 		$oauth2_token_arguments = array(
 	        'grant_type' => 'password',
