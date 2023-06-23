@@ -1,0 +1,16 @@
+{
+  "name": "TailwindCSS",
+  "version": "1.0.0",
+  "description": "An example MLP for using TailwindCSS in Sugar customizations. ",
+  "main": "index.js",
+  "author": "Scott King <scott.king@sugarcrm.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev:build": "tailwindcss -i ./tailwind.css -o ./Files/custom/themes/tailwind.css",
+    "build": "tailwindcss -i ./tailwind.css -o ./Files/custom/themes/tailwind.css --minify",
+    "package": "zip tailwindcss-mlp-example.zip manifest.php -r Files/"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.2"
+  }
+}
