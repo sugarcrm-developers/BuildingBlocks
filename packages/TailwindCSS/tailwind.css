@@ -1,0 +1,10 @@
+@tailwind components;
+@tailwind utilities;
+
+.test {
+    @apply flex;
+}
+
+.test-selector-2 {
+    @apply flex items-center mt-4;
+}

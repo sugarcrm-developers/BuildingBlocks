@@ -3,4 +3,5 @@
 *.idea
 api-examples/java/.idea
 api-examples/java/target
+node_modules/
 
