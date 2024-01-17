@@ -1,0 +1,9 @@
+.test {
+  display: flex
+}
+
+.test-selector-2 {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center
+}
