@@ -3,6 +3,18 @@ Each of these packages are ready to be built, zipped, uploaded and installed usi
 
 The `buildPackages.sh` script can be used to build all these packages easily on Unix based environments.
 
+## [ProcessManagementDashlet](ProcessManagementDashlet/)
+
+Serves as the starting point for adding a custom dashlet to a record view. It triggers a Sidecar API call based on the dashlet’s configuration, which then invokes a backend endpoint to fetch and populate data specific to the current record.
+
+## [ProcessManagementPruner](ProcessManagementPruner/)
+
+Serves as the starting point for building a pruner for SugarBPM and its related tables. It retrieves `pmse*` records along with their relationships and prunes them in a cascaded manner. You can also leverage [Data Archiver](https://support.sugarcrm.com/SmartLinks/administration_guide/system/data_archiver/) to support your use case.
+
+## [HighlightField](HighlightField/)
+
+Based on the article [Creating Custom Field Types](https://support.sugarcrm.com/SmartLinks/developer_guide/cookbook/creating_custom_fields/), in this example, we create a custom field type called "Highlightfield", which will mimic the base text field type with the added feature that the displayed text for the field will be highlighted in a color chosen when the field is created in Studio.
+
 ## [Canvas iFrame](CanvasIFrame)
 This package displays an IFrame inside Sugar.
 

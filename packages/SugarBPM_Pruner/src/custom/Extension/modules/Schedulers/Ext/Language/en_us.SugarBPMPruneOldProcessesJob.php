@@ -1,0 +1,2 @@
+<?php
+$mod_strings['LBL_SUGARCRM_SUGARCRM_CUSTOM_SUGARBPM_PRUNEOLDPROCESSESJOB'] = 'BuildingBlocks: Prune BPM Tables';

@@ -4,7 +4,7 @@
 
 
 $packageID = "BuildingBlocks_IFrameDrawerAction";
-$packageLabel = "IFrame Drawer Action";
+$packageLabel = "BuildingBlocks: IFrame Drawer Action";
 $supportedVersionRegex = '(9|8|7)\\..*$';
 $acceptableSugarFlavors = array('PRO','ENT','ULT');
 $description = 'Opens a drawer that displays a custom IFrame';

@@ -4,7 +4,7 @@
 
 
 $packageID = "BuildingBlock_HelloWorldDashlet";
-$packageLabel = "Hello World Dashlet";
+$packageLabel = "BuildingBlocks: Hello World Dashlet";
 $supportedVersionRegex = '(9|8|7)\\..*$';
 $acceptableSugarFlavors = array('PRO','ENT','ULT');
 $description = 'Package for a basic Sugar Dashlet';

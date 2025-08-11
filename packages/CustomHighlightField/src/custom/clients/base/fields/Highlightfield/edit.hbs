@@ -1,0 +1,18 @@
+{{!
+    We have not made any edits to this file that differ from stock, however,
+    we could add styling here just as we did for the detail and list templates.
+}}
+
+<input
+  type="text"
+  name="{{name}}"
+  value="{{value}}"
+  {{#if def.len}} maxlength="{{def.len}}"{{/if}}
+  {{#if def.tabindex}} tabindex="{{def.tabindex}}"{{/if}}
+  {{#if def.placeholder}} placeholder="{{str def.placeholder this.model.module}}"{{/if}}
+  class="inherit-width">
+        {{#unless hideHelp}}
+           {{#if def.help}}
+              <p class="help-block">{{str def.help module}}</p>
+           {{/if}}
+        {{/unless}}

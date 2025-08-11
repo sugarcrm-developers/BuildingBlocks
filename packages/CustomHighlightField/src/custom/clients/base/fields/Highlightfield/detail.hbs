@@ -1,0 +1,9 @@
+{{!
+    The data for field colors are passed into the handlebars template through the def array. For this example, the def.backcolor and def.textcolor properties. These indexes are defined in:
+    ./custom/modules/DynamicFields/templates/Fields/TemplateHighlightfield.php
+}}
+{{#if value}}
+<div class="ellipsis_inline" data-bs-placement="bottom"{{#if dir}} dir="{{dir}}"{{/if}} title="{{value}}" style="background:{{def.backcolor}}; color:{{def.textcolor}}">
+    {{value}}
+</div>
+{{/if}}

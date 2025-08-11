@@ -1,0 +1,88 @@
+{{!--
+/*
+ * Your installation or use of this SugarCRM file is subject to the applicable
+ * terms available at
+ * http://support.sugarcrm.com/Resources/Master_Subscription_Agreements/.
+ * If you do not agree to all of the applicable terms or do not have the
+ * authority to bind the entity as an authorized representative, then do not
+ * install or use this SugarCRM file.
+ *
+ * Copyright (C) SugarCRM Inc. All rights reserved.
+ */
+--}}
+{{#each filterFields}}
+    <div class="record-cell" style="display: flex; justify-content: flex-end;padding: 4px 4px{{#unless @last}} 0px{{/unless}}; height:auto; margin:0;">
+        {{#unless ignoreLabel}}
+        <div class="record-label" style="margin-right:4px;">
+            {{str label ../../module}}
+        </div>
+        {{/unless}}
+        <div style="flex: 1;">{{field ../this model=../filterFieldsModel}}</div>
+    </div>
+{{/each}}
+{{#if collection.dataFetched}}
+    {{#if collection.models.length}}
+        <link type="text/css" href="modules/pmse_Project/css/jcore.libraries.css?v={{cacheKiller}}" rel="stylesheet" />
+        <link type="text/css" href="modules/pmse_Project/css/jcore.adam-ui.css?v={{cacheKiller}}" rel="stylesheet" />
+        <link type="text/css" href="modules/pmse_Project/css/jcore.adam.css?v={{cacheKiller}}" rel="stylesheet" />
+        <link type="text/css" href="modules/pmse_Project/css/pmse.css?v={{cacheKiller}}" rel="stylesheet" />
+
+        <div style="width: 100%; display: block; overflow: auto; border-top: 1px solid #d3dbe1; min-height: 70%;">
+        {{#each meta.panels}}
+            <table class="table table-striped dataTable reorderable-columns">
+                <thead>
+                    <tr class="flex-list-row-header">
+                        <th class="first-column" style="min-width: 28px; max-width:28px;">
+                            <button data-widths="reset" style="padding: 3px 8px; background: transparent; border: 0 none;" rel="tooltip" title="{{str 'LBL_RESET_DEFAULT_WIDTHS' ../module}}"> <i class="sicon sicon-expand-right" style="transform: rotate(45deg);"></i>
+                            </button>
+                        </th>
+                        {{#each fields}}
+                            <th class="{{#isSortable ../../module this}}sorting{{#eq ../../../collection.orderBy.field name}}_{{../../../../orderBy.direction}}{{/eq}} orderBy{{name}}{{/isSortable}}{{#if widthClass}} {{widthClass}}{{/if}}"
+                                {{#if styles}} style="{{styles}}"{{/if}}
+                                {{#if name}} data-fieldname="{{name}}"{{/if}} data-orderby="{{orderBy}}">
+
+                                <div class="sortable-row-header-container">
+                                    <div data-draggable="true">
+                                        <span class="sortable-row-header-column-name">
+                                            {{#if icon}}
+                                                <i class="{{buildIcon icon.type}}" rel="tooltip"  title="{{str icon.tooltip ../../module}} "></i>
+                                            {{/if}}
+                                            {{str label ../../module}}
+                                        </span>
+                                    </div>
+                                    <span class="sortable-row-header-arrows">
+                                        <i class="sicon sicon-arrow-up"></i>
+                                        <i class="sicon sicon-arrow-down"></i>
+                                    </span>
+                                </div>
+                            </th>
+                        {{/each}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each ../collection.models}}
+                        <tr class="single">
+                            <td style="min-width: 28px; max-width: 28px;" class="first-column">
+                                {{#with ../../rowActions}}
+                                    {{field ../../../this model=../this template=../../../viewName}}
+                                {{/with}}
+                            </td>
+                            {{#each ../fields}}
+                                <td{{#if align}} class="{{align}}"{{/if}}>{{field ../../../this model=../this template=../../../viewName}}</td>
+                            {{/each}}
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        {{/each}}
+        </div>
+    {{else}}
+        <div class="block-footer tcenter">
+            {{str "LBL_NO_DATA_AVAILABLE"}}
+        </div>
+    {{/if}}
+{{else}}
+    <div class="block-footer tcenter">
+        {{loading 'LBL_ALERT_TITLE_LOADING'}}
+    </div>
+{{/if}}
