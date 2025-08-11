@@ -1,22 +1,18 @@
 ({
-    // Copyright 2016 SugarCRM Inc.  Licensed by SugarCRM under the Apache 2.0 license.
-    events: {
-        //On click of our "button" element
-        'click [data-action=open_phone]': 'togglePopup',
+    extendsFrom: 'SidebarNavItemView',
+
+    primaryActionOnClick: function() {
+        this.togglePopup();
     },
-    
-    // tagName attribute is inherited from Backbone.js.
-    // We set it to "span" instead of default "div" so that our "button" element is displayed inline.
-    tagName: "span",
+
     // Used to keep track of Popup since it is not attached to this View's DOM
     $popup: undefined,
     /**
      * Toggle the display of the popup.  Called when the phone icon is pressed in the footer of the page.
      */
     togglePopup: function () {
-        //Toggle active status on button in footer
-        var $button = this.$('[data-action="open_phone"]');
-        $button.toggleClass('active');
+        // var $button = this.$('[data-action="open_phone"]');
+        // $button.toggleClass('active');
         //Create popup if necessary, otherwise just toggle the hidden class to hide/show.
         if (!this.$popup) {
             this._createPopup();
@@ -47,8 +43,8 @@
      */
     _closePopup: function () {
         this.$popup.addClass('hidden');
-        var $button = this.$('[data-action="open_phone"]');
-        $button.removeClass('active');
+        // var $button = this.$('[data-action="open_phone"]');
+        // $button.removeClass('active');
     },
     /**
      * Dispose of unattached popup when footer destroyed

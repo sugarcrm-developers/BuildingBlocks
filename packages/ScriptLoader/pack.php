@@ -4,7 +4,7 @@
 
 
 $packageID = "BuildingBlock_ScriptLoader";
-$packageLabel = "ScriptLoader";
+$packageLabel = "BuildingBlocks: ScriptLoader";
 $supportedVersionRegex = '(9|8|7)\\..*$';
 $acceptableSugarFlavors = array('PRO','ENT','ULT');
 $description = 'Loading custom JavaScript into Sugar made easy.';

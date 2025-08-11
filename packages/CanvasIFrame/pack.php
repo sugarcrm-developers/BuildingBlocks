@@ -4,7 +4,7 @@
 
 
 $packageID = "BuildingBlock_CanvasIFrame";
-$packageLabel = "Canvas IFrame";
+$packageLabel = "BuildingBlocks: Canvas IFrame";
 $supportedVersionRegex = '(9|8|7)\\..*$';
 /******************************/
 
